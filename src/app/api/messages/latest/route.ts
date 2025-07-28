@@ -1,17 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { MongoClient } from 'mongodb';
-
-const uri = process.env.MONGODB_URI!;
-const client = new MongoClient(uri);
+import { connectToDatabase } from '@/lib/mongodb';
 
 export async function GET(request: NextRequest) {
   try {
+    // Skip during build time
+    if (process.env.BUILDING === 'true') {
+      return NextResponse.json({
+        success: true,
+        data: [],
+        count: 0
+      });
+    }
+
     const { searchParams } = new URL(request.url);
     const team = searchParams.get('team') || 'operations';
     const since = searchParams.get('since') || '';
 
-    await client.connect();
-    const db = client.db(process.env.MONGODB_DB || 'opsquery');
+    const { db } = await connectToDatabase();
     
     // Build query for latest messages
     const filter: any = { };
@@ -35,8 +40,6 @@ export async function GET(request: NextRequest) {
       .sort({ timestamp: -1 })
       .limit(50)
       .toArray();
-
-    await client.close();
 
     return NextResponse.json({
       success: true,
