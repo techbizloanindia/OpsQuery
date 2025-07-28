@@ -1,0 +1,17 @@
+{
+  "mcp": {
+    "servers": {
+      "MongoDB": {
+        "type": "stdio",
+        "command": "npx",
+        "args": [
+          "-y",
+          "mongodb-mcp-server",
+          "--connectionString",
+          "mongodb+srv://querymodel:YOUR_DB_PASSWORD_HERE@querymodel.kqivk1u.mongodb.net/",
+          "--readOnly"
+        ]
+      }
+    }
+  }
+} 
