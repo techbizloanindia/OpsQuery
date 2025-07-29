@@ -37,7 +37,9 @@
     "production-build": "cross-env NODE_ENV=production npm run build",
     "analyze": "cross-env ANALYZE=true npm run build",
     "env:validate": "node scripts/validate-env.cjs",
-    "env:check": "npm run env:validate"
+    "env:check": "npm run env:validate",
+    "env:production": "node scripts/check-production-env.cjs",
+    "deploy:check": "npm run env:production && npm run build"
   },
   "engines": {
     "node": ">=18.17.0",
@@ -64,6 +66,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "chalk": "^4.1.2",
     "cross-env": "^7.0.3",
     "eslint": "^9",
     "eslint-config-next": "15.3.5",

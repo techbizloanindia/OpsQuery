@@ -77,6 +77,16 @@ interface AppConfig {
 
 const getEnvVar = (key: string, defaultValue?: string): string => {
   const value = process.env[key];
+  
+  // Special handling for MONGODB_URI in production
+  if (key === 'MONGODB_URI' && value === undefined && defaultValue === undefined) {
+    if (process.env.NODE_ENV === 'production') {
+      console.error(`❌ CRITICAL: ${key} environment variable is required for production but not defined`);
+      console.error('🔧 Please configure this in your deployment platform (Vercel/Netlify/AWS)');
+    }
+    throw new Error(`Environment variable ${key} is required but not defined. Please configure it in your deployment platform.`);
+  }
+  
   if (value === undefined && defaultValue === undefined) {
     throw new Error(`Environment variable ${key} is required but not defined`);
   }
